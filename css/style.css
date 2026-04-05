@@ -1,0 +1,310 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #4C1D95 0%, #7E22CE 50%, #BE185D 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    overflow: hidden;
+    position: relative;
+}
+
+.blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0.6;
+    animation: float 20s infinite ease-in-out;
+}
+
+.blob-1 {
+    width: 400px;
+    height: 400px;
+    background: #A855F7;
+    top: -100px;
+    left: -100px;
+    animation-delay: 0s;
+}
+
+.blob-2 {
+    width: 350px;
+    height: 350px;
+    background: #EC4899;
+    top: 50%;
+    right: -100px;
+    animation-delay: 5s;
+}
+
+.blob-3 {
+    width: 300px;
+    height: 300px;
+    background: #6366F1;
+    bottom: -100px;
+    left: 30%;
+    animation-delay: 10s;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+    }
+    25% {
+        transform: translate(50px, 50px) scale(1.1);
+    }
+    50% {
+        transform: translate(0, 100px) scale(1);
+    }
+    75% {
+        transform: translate(-50px, 50px) scale(0.9);
+    }
+}
+
+.container {
+    text-align: center;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 60px 40px;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    max-width: 600px;
+    width: 100%;
+    position: relative;
+    z-index: 10;
+}
+
+h1 {
+    color: #333;
+    font-size: 2.5em;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.subtitle {
+    color: #666;
+    font-size: 1.2em;
+    margin-bottom: 40px;
+}
+
+.nav-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.btn {
+    padding: 15px 30px;
+    font-size: 1.1em;
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: block;
+    color: white;
+    background: linear-gradient(135deg, #A855F7 0%, #EC4899 50%, #9333EA 100%);
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(168, 85, 247, 0.4);
+}
+
+.features {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 40px;
+    gap: 20px;
+}
+
+.feature {
+    text-align: center;
+    flex: 1;
+}
+
+.feature-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 10px;
+    font-size: 1.5em;
+}
+
+.feature-vrienden {
+    background: #D8B4FE;
+}
+
+.feature-veilig {
+    background: #6EE7B7;
+}
+
+.feature-snel {
+    background: #FDE047;
+}
+
+.feature-text {
+    color: #666;
+    font-size: 0.9em;
+    font-weight: 600;
+}
+
+.footer {
+    margin-top: 40px;
+    color: #999;
+    font-size: 0.9em;
+}
+
+/* Chat styles (Desktop & default) */
+.chat-container {
+    margin-top: 30px;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 15px;
+    padding: 15px;
+}
+
+#messages {
+    list-style: none;
+    height: 150px;
+    overflow-y: auto;
+    padding: 10px;
+    background: white;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+#messages li {
+    padding: 8px 12px;
+    background: #E5E7EB;
+    border-radius: 15px;
+    align-self: flex-start;
+    max-width: 80%;
+    word-break: break-word;
+    font-size: 0.9em;
+    text-align: left;
+}
+
+#messages li.self {
+    background: #A855F7;
+    color: white;
+    align-self: flex-end;
+}
+
+.chat-input-area {
+    display: flex;
+    gap: 10px;
+}
+
+#messageInput {
+    flex: 1;
+    padding: 10px 15px;
+    border: 1px solid #D1D5DB;
+    border-radius: 10px;
+    outline: none;
+    font-family: inherit;
+    font-size: 16px; /* Prevents auto-zoom on iOS */
+}
+
+#messageInput:focus {
+    border-color: #A855F7;
+}
+
+#sendButton {
+    padding: 10px 20px;
+    font-size: 1em;
+}
+
+/* Mobile Responsive Adjustments (Make it feel like a mobile app) */
+@media (max-width: 600px) {
+    body {
+        padding: 5px;
+    }
+
+    .container {
+        padding: 25px 15px;
+        border-radius: 15px;
+        /* Make it take almost full viewport height for that App Feel */
+        min-height: 95vh;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    h1 {
+        font-size: 1.8em;
+        order: 1;
+    }
+    
+    .subtitle {
+        font-size: 1em;
+        margin-bottom: 20px;
+        order: 2;
+    }
+    
+    .nav-buttons {
+        gap: 10px;
+        order: 3;
+    }
+
+    .btn {
+        padding: 14px 15px; /* Thicker buttons for fat fingers */
+        font-size: 1.05em;
+        border-radius: 10px;
+    }
+
+    .chat-container {
+        padding: 10px;
+        margin-top: 15px;
+        border-radius: 12px;
+        flex: 1; /* Allow chat to grow and fill empty space */
+        display: flex;
+        flex-direction: column;
+        order: 4;
+    }
+
+    #messages {
+        flex: 1;
+        min-height: 250px;
+        max-height: 40vh;
+    }
+
+    .chat-input-area {
+        flex-direction: row; 
+    }
+
+    #sendButton {
+        padding: 10px 15px;
+    }
+
+    .features {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 20px;
+        order: 5; 
+    }
+    
+    .feature {
+        flex: 1 1 30%;
+    }
+
+    /* Shrink the background blobs slightly so it doesn't cause lag */
+    .blob-1 { width: 200px; height: 200px; top: -50px; left: -50px; }
+    .blob-2 { width: 180px; height: 180px; right: -50px; }
+    .blob-3 { width: 150px; height: 150px; bottom: -50px; }
+    
+    .footer {
+        margin-top: 20px;
+        order: 6;
+    }
+}

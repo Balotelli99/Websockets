@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome - Websockets</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+    
+    <div class="container">
+        <h1>Welcome</h1>
+        <p class="subtitle">Kies een optie om te beginnen</p>
+        
+        <div class="nav-buttons">
+            <a href="#" class="btn action-btn">Start Nieuwe Sessie</a>
+            <a href="#" class="btn action-btn">Deelnemen aan Sessie</a>
+            <a href="#" class="btn action-btn">Bekijk Documenten</a>
+            <a href="#" class="btn action-btn">Instellingen</a>
+        </div>
+        
+        <div class="chat-container">
+            <ul id="messages"></ul>
+            <div class="chat-input-area">
+                <input type="text" id="messageInput" placeholder="Typ een bericht...">
+                <button id="sendButton" class="btn">Stuur</button>
+            </div>
+        </div>
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon feature-vrienden">👥</div>
+                <div class="feature-text">Vrienden</div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon feature-veilig">🔒</div>
+                <div class="feature-text">Veilig</div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon feature-snel">⚡</div>
+                <div class="feature-text">Snel</div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Websockets Project - 2026</p>
+        </div>
+    </div>
+
+    <script>
+        const ws = new WebSocket(`ws://${window.location.host}`);
+        const messages = document.getElementById('messages');
+        const messageInput = document.getElementById('messageInput');
+        const sendButton = document.getElementById('sendButton');
+
+        function appendMessage(text, isSelf = false) {
+            const li = document.createElement('li');
+            li.textContent = text;
+            if (isSelf) li.classList.add('self');
+            messages.appendChild(li);
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        ws.onopen = () => {
+            console.log('Connected to WebSocket server');
+            appendMessage('Verbonden met server', true);
+        };
+
+        ws.onmessage = (event) => {
+            console.log('Received:', event.data);
+            try {
+                // Check if message is JSON (button click logic)
+                const data = JSON.parse(event.data);
+                if (data.action) {
+                    appendMessage(`Iemand koos: ${data.action}`);
+                }
+            } catch (e) {
+                // If it's pure text (chat message)
+                appendMessage(`Ander: ${event.data}`);
+            }
+        };
+
+        ws.onclose = () => {
+            console.log('Disconnected from WebSocket server');
+            appendMessage('Verbinding verbroken', true);
+        };
+
+        ws.onerror = (error) => {
+            console.error('WebSocket error:', error);
+        };
+
+        // Chat sturen
+        sendButton.addEventListener('click', () => {
+            const message = messageInput.value;
+            if (message.trim() !== '') {
+                ws.send(message);
+                appendMessage(`Jij: ${message}`, true);
+                messageInput.value = '';
+            }
+        });
+
+        // Enter knop support voor chat
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendButton.click();
+            }
+        });
+
+        // Oude knoppen functionaliteit
+        document.querySelectorAll('.action-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const action = btn.textContent;
+                ws.send(JSON.stringify({ action: action }));
+                appendMessage(`Jij koos: ${action}`, true);
+            });
+        });
+    </script>
+</body>
+</html>
