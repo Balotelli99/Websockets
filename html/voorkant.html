@@ -3,119 +3,417 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome - Websockets</title>
+    <title>SA Chat - Welcome</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <div class="blob blob-1"></div>
-    <div class="blob blob-2"></div>
-    <div class="blob blob-3"></div>
-    
-    <div class="container">
-        <h1>Welcome</h1>
-        <p class="subtitle">Kies een optie om te beginnen</p>
-        
-        <div class="nav-buttons">
-            <a href="#" class="btn action-btn">Start Nieuwe Sessie</a>
-            <a href="#" class="btn action-btn">Deelnemen aan Sessie</a>
-            <a href="#" class="btn action-btn">Bekijk Documenten</a>
-            <a href="#" class="btn action-btn">Instellingen</a>
-        </div>
-        
-        <div class="chat-container">
-            <ul id="messages"></ul>
-            <div class="chat-input-area">
-                <input type="text" id="messageInput" placeholder="Typ een bericht...">
-                <button id="sendButton" class="btn">Stuur</button>
+    <!-- View 1: Landing Page -->
+    <div id="landing-view" class="view-active">
+        <div class="landing-container">
+            <div class="logo-wrapper">
+                <div class="logo-box">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                </div>
+                <div class="notification-badge">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="white" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                    </svg>
+                </div>
+            </div>
+            
+            <div class="title-section">
+                <h1 class="title">SA Chat</h1>
+                <div class="title-divider"></div>
+            </div>
+            
+            <p class="subtitle">Chat veilig en met stijl 💭</p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon" style="color: #ffffff;">
+                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                    </div>
+                    <span>Vrienden</span>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon" style="color: #4ade80;">
+                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                    </div>
+                    <span>Veilig</span>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon" style="color: #facc15;">
+                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                    </div>
+                    <span>Snel</span>
+                </div>
+            </div>
+            
+            <div class="auth-buttons">
+                <button class="btn btn-primary" id="btnToRegister">Account aanmaken</button>
+                <button class="btn btn-secondary" id="btnToLogin">Inloggen</button>
             </div>
         </div>
-        <div class="features">
-            <div class="feature">
-                <div class="feature-icon feature-vrienden">👥</div>
-                <div class="feature-text">Vrienden</div>
+    </div>
+
+    <!-- View 2: Login Page -->
+    <div id="login-view" class="view-hidden">
+        <div class="login-container">
+            <div class="header-nav">
+                <button id="btnBack" class="back-btn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                    Terug
+                </button>
             </div>
-            <div class="feature">
-                <div class="feature-icon feature-veilig">🔒</div>
-                <div class="feature-text">Veilig</div>
-            </div>
-            <div class="feature">
-                <div class="feature-icon feature-snel">⚡</div>
-                <div class="feature-text">Snel</div>
+            
+            <div class="login-card">
+                <h2 class="login-title">Welkom terug!</h2>
+                <p class="login-subtitle">Log in op je account</p>
+                
+                <form class="login-form">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <div class="input-wrapper">
+                            <div class="input-icon left">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                            </div>
+                            <input type="email" placeholder="jouw@email.nl" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Wachtwoord</label>
+                        <div class="input-wrapper">
+                            <div class="input-icon left">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                            </div>
+                            <input type="password" placeholder="••••••••" required id="passwordInput">
+                            <div class="input-icon right cursor-pointer" id="togglePassword">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="eyeIcon"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="forgot-password">
+                        <a href="#">Wachtwoord vergeten?</a>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary submit-btn">Inloggen</button>
+                    
+                    <div class="register-link">
+                        Nog geen account? <a href="#" id="linkToRegister">Registreer hier</a>
+                    </div>
+                </form>
             </div>
         </div>
-        
-        <div class="footer">
-            <p>Websockets Project - 2026</p>
+    </div>
+
+    <!-- View 4: Register Page -->
+    <div id="register-view" class="view-hidden">
+        <div class="login-container">
+            <div class="header-nav">
+                <button id="btnBackToLanding" class="back-btn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                    Terug
+                </button>
+            </div>
+            
+            <div class="login-card">
+                <h2 class="login-title">Account aanmaken</h2>
+                <p class="login-subtitle">Begin met chatten in stijl</p>
+                
+                <form class="register-form login-form">
+                    <div class="form-group">
+                        <label>Naam</label>
+                        <div class="input-wrapper">
+                            <div class="input-icon left">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                            </div>
+                            <input type="text" placeholder="Jouw naam" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Email</label>
+                        <div class="input-wrapper">
+                            <div class="input-icon left">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                            </div>
+                            <input type="email" placeholder="jouw@email.nl" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Wachtwoord</label>
+                        <div class="input-wrapper">
+                            <div class="input-icon left">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                            </div>
+                            <input type="password" placeholder="••••••••" required id="regPasswordInput">
+                            <div class="input-icon right cursor-pointer" id="regTogglePassword">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="regEyeIcon"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Bevestig wachtwoord</label>
+                        <div class="input-wrapper">
+                            <div class="input-icon left">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                            </div>
+                            <input type="password" placeholder="••••••••" required>
+                        </div>
+                    </div>
+                    
+                    <div style="height: 10px;"></div>
+                    <button type="submit" class="btn btn-primary submit-btn">Account aanmaken</button>
+                    
+                    <div class="register-link">
+                        Al een account? <a href="#" id="linkToLogin">Log hier in</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- View 3: Chat List App -->
+    <div id="chat-app-view" class="view-hidden">
+        <div class="app-header">
+            <h2 class="app-title">SA Chat</h2>
+            <div class="app-header-icons" style="position: relative;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="cursor-pointer">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                <svg id="btnSettings" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="cursor-pointer">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                </svg>
+                
+                <div id="settingsMenu" class="settings-dropdown view-hidden">
+                    <button class="dropdown-item">Instellingen</button>
+                    <div class="dropdown-divider"></div>
+                    <button id="btnLogout" class="dropdown-item text-danger">Uitloggen</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="search-container">
+            <div class="search-bar">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" placeholder="Zoek vrienden...">
+            </div>
+        </div>
+
+        <div class="chat-list">
+            <div class="chat-item">
+                <div class="avatar-container">
+                    <img src="https://i.pravatar.cc/150?img=1" alt="Sophie">
+                    <div class="status-indicator online-purple"></div>
+                </div>
+                <div class="chat-info">
+                    <div class="chat-header-info">
+                        <span class="chat-name">Sophie</span>
+                        <span class="chat-time">15 minuten geleden</span>
+                    </div>
+                    <div class="chat-message-info">
+                        <span class="chat-snippet">Zie je later!</span>
+                        <span class="unread-badge">2</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-item">
+                <div class="avatar-container">
+                    <img src="https://i.pravatar.cc/150?img=11" alt="Thomas">
+                </div>
+                <div class="chat-info">
+                    <div class="chat-header-info">
+                        <span class="chat-name">Thomas</span>
+                        <span class="chat-time">40 minuten geleden</span>
+                    </div>
+                    <div class="chat-message-info">
+                        <span class="chat-snippet">Perfect, tot morgen!</span>
+                        <span class="unread-badge hidden">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-item">
+                <div class="avatar-container">
+                    <img src="https://i.pravatar.cc/150?img=5" alt="Emma">
+                    <div class="status-indicator online-purple"></div>
+                </div>
+                <div class="chat-info">
+                    <div class="chat-header-info">
+                        <span class="chat-name">Emma</span>
+                        <span class="chat-time">ongeveer 2 uur geleden</span>
+                    </div>
+                    <div class="chat-message-info">
+                        <span class="chat-snippet">Haha dat is grappig 😂</span>
+                        <span class="unread-badge">1</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-item">
+                <div class="avatar-container">
+                    <img src="https://i.pravatar.cc/150?img=12" alt="Lars">
+                </div>
+                <div class="chat-info">
+                    <div class="chat-header-info">
+                        <span class="chat-name">Lars</span>
+                        <span class="chat-time">ongeveer 5 uur geleden</span>
+                    </div>
+                    <div class="chat-message-info">
+                        <span class="chat-snippet">Bedankt voor de info!</span>
+                        <span class="unread-badge hidden">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-item">
+                <div class="avatar-container">
+                    <img src="https://i.pravatar.cc/150?img=9" alt="Lisa">
+                    <div class="status-indicator online-purple"></div>
+                </div>
+                <div class="chat-info">
+                    <div class="chat-header-info">
+                        <span class="chat-name">Lisa</span>
+                        <span class="chat-time">1 dag geleden</span>
+                    </div>
+                    <div class="chat-message-info">
+                        <span class="chat-snippet">Leuk plan! 🎉</span>
+                        <span class="unread-badge hidden">0</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        const ws = new WebSocket(`ws://${window.location.host}`);
-        const messages = document.getElementById('messages');
-        const messageInput = document.getElementById('messageInput');
-        const sendButton = document.getElementById('sendButton');
+        const btnToLogin = document.getElementById('btnToLogin');
+        const btnToRegister = document.getElementById('btnToRegister');
+        const btnBack = document.getElementById('btnBack');
+        const btnBackToLanding = document.getElementById('btnBackToLanding');
+        const linkToRegister = document.getElementById('linkToRegister');
+        const linkToLogin = document.getElementById('linkToLogin');
+        
+        const landingView = document.getElementById('landing-view');
+        const loginView = document.getElementById('login-view');
+        const registerView = document.getElementById('register-view');
+        const chatAppView = document.getElementById('chat-app-view');
 
-        function appendMessage(text, isSelf = false) {
-            const li = document.createElement('li');
-            li.textContent = text;
-            if (isSelf) li.classList.add('self');
-            messages.appendChild(li);
-            messages.scrollTop = messages.scrollHeight;
-        }
+        // Navigatie logica
+        btnToLogin.addEventListener('click', () => {
+            landingView.classList.replace('view-active', 'view-hidden');
+            loginView.classList.replace('view-hidden', 'view-active');
+        });
 
-        ws.onopen = () => {
-            console.log('Connected to WebSocket server');
-            appendMessage('Verbonden met server', true);
-        };
+        btnToRegister.addEventListener('click', () => {
+            landingView.classList.replace('view-active', 'view-hidden');
+            registerView.classList.replace('view-hidden', 'view-active');
+        });
 
-        ws.onmessage = (event) => {
-            console.log('Received:', event.data);
-            try {
-                // Check if message is JSON (button click logic)
-                const data = JSON.parse(event.data);
-                if (data.action) {
-                    appendMessage(`Iemand koos: ${data.action}`);
-                }
-            } catch (e) {
-                // If it's pure text (chat message)
-                appendMessage(`Ander: ${event.data}`);
-            }
-        };
+        btnBack.addEventListener('click', () => {
+            loginView.classList.replace('view-active', 'view-hidden');
+            landingView.classList.replace('view-hidden', 'view-active');
+        });
 
-        ws.onclose = () => {
-            console.log('Disconnected from WebSocket server');
-            appendMessage('Verbinding verbroken', true);
-        };
+        btnBackToLanding.addEventListener('click', () => {
+            registerView.classList.replace('view-active', 'view-hidden');
+            landingView.classList.replace('view-hidden', 'view-active');
+        });
 
-        ws.onerror = (error) => {
-            console.error('WebSocket error:', error);
-        };
+        linkToRegister.addEventListener('click', (e) => {
+            e.preventDefault();
+            loginView.classList.replace('view-active', 'view-hidden');
+            registerView.classList.replace('view-hidden', 'view-active');
+        });
 
-        // Chat sturen
-        sendButton.addEventListener('click', () => {
-            const message = messageInput.value;
-            if (message.trim() !== '') {
-                ws.send(message);
-                appendMessage(`Jij: ${message}`, true);
-                messageInput.value = '';
+        linkToLogin.addEventListener('click', (e) => {
+            e.preventDefault();
+            registerView.classList.replace('view-active', 'view-hidden');
+            loginView.classList.replace('view-hidden', 'view-active');
+        });
+
+        // Wachtwoord tonen/verbergen (inloggen)
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('passwordInput');
+        const eyeIcon = document.getElementById('eyeIcon');
+        
+        togglePassword.addEventListener('click', function () {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            if (type === 'text') {
+                eyeIcon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>';
+            } else {
+                eyeIcon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
             }
         });
 
-        // Enter knop support voor chat
-        messageInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                sendButton.click();
+        // Wachtwoord tonen/verbergen (registreren)
+        const regTogglePassword = document.getElementById('regTogglePassword');
+        const regPasswordInput = document.getElementById('regPasswordInput');
+        const regEyeIcon = document.getElementById('regEyeIcon');
+        
+        regTogglePassword.addEventListener('click', function () {
+            const type = regPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            regPasswordInput.setAttribute('type', type);
+            if (type === 'text') {
+                regEyeIcon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>';
+            } else {
+                regEyeIcon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
             }
         });
 
-        // Oude knoppen functionaliteit
-        document.querySelectorAll('.action-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
+        // Simuleer inloggen/registreren
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', (e) => {
                 e.preventDefault();
-                const action = btn.textContent;
-                ws.send(JSON.stringify({ action: action }));
-                appendMessage(`Jij koos: ${action}`, true);
+                // Verberg formulier views
+                if(loginView.classList.contains('view-active')) loginView.classList.replace('view-active', 'view-hidden');
+                if(registerView.classList.contains('view-active')) registerView.classList.replace('view-active', 'view-hidden');
+                
+                // Show chat view
+                document.body.style.background = '#0f172a';
+                chatAppView.classList.replace('view-hidden', 'view-active');
             });
+        });
+
+        // Settings dropdown en uitloggen
+        const btnSettings = document.getElementById('btnSettings');
+        const settingsMenu = document.getElementById('settingsMenu');
+        const btnLogout = document.getElementById('btnLogout');
+
+        btnSettings.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (settingsMenu.classList.contains('view-hidden')) {
+                settingsMenu.classList.replace('view-hidden', 'view-active');
+            } else {
+                settingsMenu.classList.replace('view-active', 'view-hidden');
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!settingsMenu.contains(e.target) && settingsMenu.classList.contains('view-active')) {
+                settingsMenu.classList.replace('view-active', 'view-hidden');
+            }
+        });
+
+        btnLogout.addEventListener('click', () => {
+            settingsMenu.classList.replace('view-active', 'view-hidden');
+            chatAppView.classList.replace('view-active', 'view-hidden');
+            document.body.style.background = ''; // Restore CSS background
+            landingView.classList.replace('view-hidden', 'view-active');
+            document.querySelectorAll('input').forEach(input => input.value = ''); // Clear inputs
         });
     </script>
 </body>
