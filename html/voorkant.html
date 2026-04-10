@@ -298,7 +298,32 @@
         </div>
     </div>
 
+    <!-- Chat Scherm -->
+    <div id="chat-view" class="view-hidden">
+        <div class="chat-header-bar">
+            <button id="btnBackToList" class="back-btn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                Terug
+            </button>
+            <div class="chat-user-info">
+                <img id="chatPartnerAvatar" src="" alt="">
+                <span id="chatPartnerName"></span>
+            </div>
+        </div>
+        <div id="chatMessages" class="chat-messages"></div>
+        <div class="chat-input-area">
+            <input type="text" id="chatInput" placeholder="Type een bericht...">
+            <button id="btnSendMessage" class="send-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+            </button>
+        </div>
+    </div>
+
     <script>
+        let ws = null;
+        let currentUsername = null;
+        let onlineUsers = [];
+
         const btnToLogin = document.getElementById('btnToLogin');
         const btnToRegister = document.getElementById('btnToRegister');
         const btnBack = document.getElementById('btnBack');
@@ -311,7 +336,6 @@
         const registerView = document.getElementById('register-view');
         const chatAppView = document.getElementById('chat-app-view');
 
-        // Navigatie logica
         btnToLogin.addEventListener('click', () => {
             landingView.classList.replace('view-active', 'view-hidden');
             loginView.classList.replace('view-hidden', 'view-active');
@@ -344,7 +368,6 @@
             loginView.classList.replace('view-hidden', 'view-active');
         });
 
-        // Wachtwoord tonen/verbergen (inloggen)
         const togglePassword = document.getElementById('togglePassword');
         const passwordInput = document.getElementById('passwordInput');
         const eyeIcon = document.getElementById('eyeIcon');
@@ -359,7 +382,6 @@
             }
         });
 
-        // Wachtwoord tonen/verbergen (registreren)
         const regTogglePassword = document.getElementById('regTogglePassword');
         const regPasswordInput = document.getElementById('regPasswordInput');
         const regEyeIcon = document.getElementById('regEyeIcon');
@@ -374,21 +396,147 @@
             }
         });
 
-        // Simuleer inloggen/registreren
+        function connectWebSocket(username) {
+            ws = new WebSocket(`ws://${window.location.host}`);
+            currentUsername = username;
+            
+            ws.onopen = () => {
+                ws.send(JSON.stringify({ type: 'login', username: username }));
+            };
+
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                if (data.type === 'userList') {
+                    onlineUsers = data.users.filter(u => u.username !== currentUsername);
+                    renderUserList();
+                } else if (data.type === 'privateMessage') {
+                    showMessage(data.from, data.content);
+                }
+            };
+
+            ws.onclose = () => {
+                ws = null;
+            };
+        }
+
+        function renderUserList() {
+            const chatList = document.querySelector('.chat-list');
+            if (onlineUsers.length === 0) {
+                chatList.innerHTML = '<div class="no-users">Nog geen andere gebruikers online. Wacht tot anderen inloggen!</div>';
+                return;
+            }
+            chatList.innerHTML = onlineUsers.map(user => `
+                <div class="chat-item" data-user="${user.username}">
+                    <div class="avatar-container">
+                        <img src="https://i.pravatar.cc/150?u=${user.username}" alt="${user.username}">
+                        <div class="status-indicator online-purple"></div>
+                    </div>
+                    <div class="chat-info">
+                        <div class="chat-header-info">
+                            <span class="chat-name">${user.username}</span>
+                        </div>
+                        <div class="chat-message-info">
+                            <span class="chat-snippet">Klik om te chatten</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            
+            document.querySelectorAll('.chat-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    openChat(item.dataset.user);
+                });
+            });
+        }
+
+        let currentChatPartner = null;
+        let chatMessages = {};
+
+        function openChat(username) {
+            currentChatPartner = username;
+            document.getElementById('chatPartnerName').textContent = username;
+            document.getElementById('chatPartnerAvatar').src = `https://i.pravatar.cc/150?u=${username}`;
+            
+            document.getElementById('chat-app-view').classList.replace('view-active', 'view-hidden');
+            document.getElementById('chat-view').classList.replace('view-hidden', 'view-active');
+            
+            renderChatMessages();
+        }
+
+        function renderChatMessages() {
+            const messagesContainer = document.getElementById('chatMessages');
+            const key = [currentUsername, currentChatPartner].sort().join('|');
+            const messages = chatMessages[key] || [];
+            
+            messagesContainer.innerHTML = messages.map(msg => `
+                <div class="message ${msg.from === currentUsername ? 'sent' : 'received'}">
+                    <div class="message-content">${msg.content}</div>
+                </div>
+            `).join('');
+            
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        document.getElementById('btnBackToList').addEventListener('click', () => {
+            document.getElementById('chat-view').classList.replace('view-active', 'view-hidden');
+            document.getElementById('chat-app-view').classList.replace('view-hidden', 'view-active');
+            currentChatPartner = null;
+        });
+
+        document.getElementById('btnSendMessage').addEventListener('click', sendMessage);
+        document.getElementById('chatInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const content = input.value.trim();
+            if (!content || !ws) return;
+            
+            const key = [currentUsername, currentChatPartner].sort().join('|');
+            if (!chatMessages[key]) chatMessages[key] = [];
+            chatMessages[key].push({ from: currentUsername, content: content, time: new Date() });
+            
+            ws.send(JSON.stringify({ type: 'privateMessage', to: currentChatPartner, content: content }));
+            input.value = '';
+            renderChatMessages();
+        }
+
+        function showMessage(from, content) {
+            const key = [currentUsername, from].sort().join('|');
+            if (!chatMessages[key]) chatMessages[key] = [];
+            chatMessages[key].push({ from: from, content: content, time: new Date() });
+            
+            if (currentChatPartner === from) {
+                renderChatMessages();
+            }
+        }
+
         document.querySelectorAll('form').forEach(form => {
             form.addEventListener('submit', (e) => {
                 e.preventDefault();
-                // Verberg formulier views
+                let username;
+                if (loginView.classList.contains('view-active')) {
+                    username = loginView.querySelector('input[type="email"]').value.split('@')[0];
+                } else {
+                    username = registerView.querySelector('input[type="text"]').value;
+                }
+                
+                if (!username) {
+                    alert('Vul een naam in');
+                    return;
+                }
+                
                 if(loginView.classList.contains('view-active')) loginView.classList.replace('view-active', 'view-hidden');
                 if(registerView.classList.contains('view-active')) registerView.classList.replace('view-active', 'view-hidden');
                 
-                // Show chat view
                 document.body.style.background = '#0f172a';
                 chatAppView.classList.replace('view-hidden', 'view-active');
+                
+                connectWebSocket(username);
             });
         });
 
-        // Settings dropdown en uitloggen
         const btnSettings = document.getElementById('btnSettings');
         const settingsMenu = document.getElementById('settingsMenu');
         const btnLogout = document.getElementById('btnLogout');
@@ -411,9 +559,13 @@
         btnLogout.addEventListener('click', () => {
             settingsMenu.classList.replace('view-active', 'view-hidden');
             chatAppView.classList.replace('view-active', 'view-hidden');
-            document.body.style.background = ''; // Restore CSS background
+            document.body.style.background = '';
             landingView.classList.replace('view-hidden', 'view-active');
-            document.querySelectorAll('input').forEach(input => input.value = ''); // Clear inputs
+            document.querySelectorAll('input').forEach(input => input.value = '');
+            if (ws) {
+                ws.close();
+                ws = null;
+            }
         });
     </script>
 </body>
