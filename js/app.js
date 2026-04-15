@@ -50,7 +50,7 @@ $('regTogglePassword').onclick = () => {
 // WEBSOCKET CONNECTION
 // ============================================
 function connectWebSocket(username) {
-    // Use correct protocol (ws for http, wss for https)
+    // Use wss:// for production (HTTPS), ws:// for local
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
     const wsUrl = `${protocol}//${window.location.host}`;
     
