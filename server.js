@@ -25,7 +25,6 @@ function broadcastUserList() {
             client.send(message);
         }
     });
-    console.log('User list broadcast:', userList);
 }
 
 function sendPrivateMessage(senderWs, targetUsername, content) {
@@ -45,7 +44,6 @@ function sendPrivateMessage(senderWs, targetUsername, content) {
             content: content
         });
         targetWs.send(message);
-        console.log(`Private message from ${senderName} to ${targetUsername}: ${content}`);
     }
 }
 
@@ -54,13 +52,12 @@ wss.on('connection', (ws) => {
 
     ws.on('message', (message) => {
         const data = JSON.parse(message.toString());
-        console.log('Received:', data);
         
         if (data.type === 'login') {
             connectedUsers.set(ws, { username: data.username });
-            console.log(`User logged in: ${data.username}`);
             broadcastUserList();
-        } else if (data.type === 'privateMessage') {
+        } 
+        else if (data.type === 'privateMessage') {
             sendPrivateMessage(ws, data.to, data.content);
         }
     });
@@ -68,7 +65,6 @@ wss.on('connection', (ws) => {
     ws.on('close', () => {
         const user = connectedUsers.get(ws);
         if (user) {
-            console.log(`User disconnected: ${user.username}`);
             connectedUsers.delete(ws);
             broadcastUserList();
         }

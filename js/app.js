@@ -1,213 +1,228 @@
+// ============================================
+// VARIABLES
+// ============================================
 let ws = null;
-let currentUsername = null;
+let currentUser = null;
+let currentPartner = null;
 let onlineUsers = [];
+let chatMessages = {};
+let unreadMessages = {};
 
-const btnToLogin = document.getElementById('btnToLogin');
-const btnToRegister = document.getElementById('btnToRegister');
-const btnBack = document.getElementById('btnBack');
-const btnBackToLanding = document.getElementById('btnBackToLanding');
-const linkToRegister = document.getElementById('linkToRegister');
-const linkToLogin = document.getElementById('linkToLogin');
+// ============================================
+// DOM SHORTCUTS
+// ============================================
+const $ = (id) => document.getElementById(id);
+const showView = (from, to) => {
+    from.classList.replace('view-active', 'view-hidden');
+    to.classList.replace('view-hidden', 'view-active');
+};
 
-const landingView = document.getElementById('landing-view');
-const loginView = document.getElementById('login-view');
-const registerView = document.getElementById('register-view');
-const chatAppView = document.getElementById('chat-app-view');
+// ============================================
+// VIEW NAVIGATION
+// ============================================
 
-btnToLogin.addEventListener('click', () => {
-    landingView.classList.replace('view-active', 'view-hidden');
-    loginView.classList.replace('view-hidden', 'view-active');
-});
+// Landing -> Login/Register
+$('btnToLogin').onclick = () => showView($('landing-view'), $('login-view'));
+$('btnToRegister').onclick = () => showView($('landing-view'), $('register-view'));
 
-btnToRegister.addEventListener('click', () => {
-    landingView.classList.replace('view-active', 'view-hidden');
-    registerView.classList.replace('view-hidden', 'view-active');
-});
+// Login/Register -> Landing
+$('btnBack').onclick = () => showView($('login-view'), $('landing-view'));
+$('btnBackToLanding').onclick = () => showView($('register-view'), $('landing-view'));
 
-btnBack.addEventListener('click', () => {
-    loginView.classList.replace('view-active', 'view-hidden');
-    landingView.classList.replace('view-hidden', 'view-active');
-});
+// Switch between Login and Register
+$('linkToRegister').onclick = (e) => { e.preventDefault(); showView($('login-view'), $('register-view')); };
+$('linkToLogin').onclick = (e) => { e.preventDefault(); showView($('register-view'), $('login-view')); };
 
-btnBackToLanding.addEventListener('click', () => {
-    registerView.classList.replace('view-active', 'view-hidden');
-    landingView.classList.replace('view-hidden', 'view-active');
-});
+// ============================================
+// PASSWORD TOGGLE
+// ============================================
+$('togglePassword').onclick = () => {
+    const input = $('passwordInput');
+    input.type = input.type === 'password' ? 'text' : 'password';
+};
 
-linkToRegister.addEventListener('click', (e) => {
-    e.preventDefault();
-    loginView.classList.replace('view-active', 'view-hidden');
-    registerView.classList.replace('view-hidden', 'view-active');
-});
+$('regTogglePassword').onclick = () => {
+    const input = $('regPasswordInput');
+    input.type = input.type === 'password' ? 'text' : 'password';
+};
 
-linkToLogin.addEventListener('click', (e) => {
-    e.preventDefault();
-    registerView.classList.replace('view-active', 'view-hidden');
-    loginView.classList.replace('view-hidden', 'view-active');
-});
-
-const togglePassword = document.getElementById('togglePassword');
-const passwordInput = document.getElementById('passwordInput');
-const eyeIcon = document.getElementById('eyeIcon');
-
-togglePassword.addEventListener('click', function () {
-    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-    passwordInput.setAttribute('type', type);
-    if (type === 'text') {
-        eyeIcon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>';
-    } else {
-        eyeIcon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
-    }
-});
-
-const regTogglePassword = document.getElementById('regTogglePassword');
-const regPasswordInput = document.getElementById('regPasswordInput');
-const regEyeIcon = document.getElementById('regEyeIcon');
-
-regTogglePassword.addEventListener('click', function () {
-    const type = regPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-    regPasswordInput.setAttribute('type', type);
-    if (type === 'text') {
-        regEyeIcon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>';
-    } else {
-        regEyeIcon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
-    }
-});
-
+// ============================================
+// WEBSOCKET CONNECTION
+// ============================================
 function connectWebSocket(username) {
     ws = new WebSocket(`ws://${window.location.host}`);
-    currentUsername = username;
+    currentUser = username;
     
     ws.onopen = () => {
         ws.send(JSON.stringify({ type: 'login', username: username }));
     };
-
+    
     ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
+        
         if (data.type === 'userList') {
-            onlineUsers = data.users.filter(u => u.username !== currentUsername);
+            onlineUsers = data.users.filter(u => u.username !== currentUser);
             renderUserList();
-        } else if (data.type === 'privateMessage') {
-            showMessage(data.from, data.content);
         }
-    };
-
-    ws.onclose = () => {
-        ws = null;
+        else if (data.type === 'privateMessage') {
+            receiveMessage(data.from, data.content);
+        }
     };
 }
 
-let unreadCounts = {};
-
+// ============================================
+// USER LIST
+// ============================================
 function renderUserList() {
-    const chatList = document.querySelector('.chat-list');
+    const list = $('chatList');
+    if (!list) return;
+    
     if (onlineUsers.length === 0) {
-        chatList.innerHTML = '<div class="no-users">Nog geen andere gebruikers online. Wacht tot anderen inloggen!</div>';
+        list.innerHTML = '<div class="no-users">Nog geen gebruikers online</div>';
         return;
     }
-    chatList.innerHTML = onlineUsers.map(user => {
-        const unread = unreadCounts[user.username] || 0;
-        const badgeClass = unread > 0 ? '' : 'hidden';
+    
+    list.innerHTML = onlineUsers.map(user => {
+        const unread = unreadMessages[user.username] || 0;
+        const initial = user.username.charAt(0).toUpperCase();
+        
         return `
-        <div class="chat-item" data-user="${user.username}">
-            <div class="chat-info">
-                <div class="chat-header-info">
-                    <span class="chat-name">${user.username}</span>
-                </div>
-                <div class="chat-message-info">
-                    <span class="chat-snippet">Klik om te chatten</span>
-                    <span class="unread-badge ${badgeClass}">${unread}</span>
+            <div class="chat-item" data-user="${user.username}">
+                <div class="user-avatar">${initial}</div>
+                <div class="chat-info">
+                    <div class="chat-header-info">
+                        <span class="chat-name">${user.username}</span>
+                    </div>
+                    <div class="chat-message-info">
+                        <span class="chat-snippet">Klik om te chatten</span>
+                        <span class="unread-badge ${unread > 0 ? '' : 'hidden'}">${unread}</span>
+                    </div>
                 </div>
             </div>
-        </div>
         `;
     }).join('');
     
-    document.querySelectorAll('.chat-item').forEach(item => {
-        item.addEventListener('click', () => {
-            openChat(item.dataset.user);
-        });
+    // Add click handlers
+    list.querySelectorAll('.chat-item').forEach(item => {
+        item.onclick = () => openChat(item.dataset.user);
     });
 }
 
-let currentChatPartner = null;
-let chatMessages = {};
-
+// ============================================
+// CHAT SCREEN
+// ============================================
 function openChat(username) {
-    currentChatPartner = username;
-    document.getElementById('chatPartnerName').textContent = username;
+    currentPartner = username;
+    $('chatPartnerName').textContent = username;
     
-    if (unreadCounts[username]) {
-        unreadCounts[username] = 0;
+    // Reset unread count
+    if (unreadMessages[username]) {
+        unreadMessages[username] = 0;
         renderUserList();
     }
     
-    document.getElementById('chat-app-view').classList.replace('view-active', 'view-hidden');
-    document.getElementById('chat-view').classList.replace('view-hidden', 'view-active');
-    
-    renderChatMessages();
+    showView($('chat-app-view'), $('chat-view'));
+    renderMessages();
 }
 
-function renderChatMessages() {
-    const messagesContainer = document.getElementById('chatMessages');
-    const key = [currentUsername, currentChatPartner].sort().join('|');
+function renderMessages() {
+    const container = $('chatMessages');
+    const key = [currentUser, currentPartner].sort().join('|');
     const messages = chatMessages[key] || [];
     
-    messagesContainer.innerHTML = messages.map(msg => `
-        <div class="message ${msg.from === currentUsername ? 'sent' : 'received'}">
-            <div class="message-content">${msg.content}</div>
-        </div>
-    `).join('');
+    container.innerHTML = messages.map(msg => {
+        const isSent = msg.from === currentUser;
+        const time = new Date(msg.time || Date.now()).toLocaleTimeString('nl-NL', { 
+            hour: '2-digit', 
+            minute: '2-digit' 
+        });
+        
+        return `
+            <div class="message ${isSent ? 'sent' : 'received'}">
+                <div class="message-content">${msg.content}</div>
+                <div class="message-time">${time}</div>
+            </div>
+        `;
+    }).join('');
     
-    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    container.scrollTop = container.scrollHeight;
 }
 
-document.getElementById('btnBackToList').addEventListener('click', () => {
-    document.getElementById('chat-view').classList.replace('view-active', 'view-hidden');
-    document.getElementById('chat-app-view').classList.replace('view-hidden', 'view-active');
-    currentChatPartner = null;
-});
-
-document.getElementById('btnSendMessage').addEventListener('click', sendMessage);
-document.getElementById('chatInput').addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') sendMessage();
-});
-
-function sendMessage() {
-    const input = document.getElementById('chatInput');
-    const content = input.value.trim();
-    if (!content || !ws) return;
+function receiveMessage(from, content) {
+    const key = [currentUser, from].sort().join('|');
     
-    const key = [currentUsername, currentChatPartner].sort().join('|');
-    if (!chatMessages[key]) chatMessages[key] = [];
-    chatMessages[key].push({ from: currentUsername, content: content, time: new Date() });
+    if (!chatMessages[key]) {
+        chatMessages[key] = [];
+    }
     
-    ws.send(JSON.stringify({ type: 'privateMessage', to: currentChatPartner, content: content }));
-    input.value = '';
-    renderChatMessages();
-}
-
-function showMessage(from, content) {
-    const key = [currentUsername, from].sort().join('|');
-    if (!chatMessages[key]) chatMessages[key] = [];
-    chatMessages[key].push({ from: from, content: content, time: new Date() });
+    chatMessages[key].push({
+        from: from,
+        content: content,
+        time: new Date()
+    });
     
-    if (currentChatPartner === from) {
-        renderChatMessages();
+    // Show in current chat or update unread
+    if (currentPartner === from) {
+        renderMessages();
     } else {
-        unreadCounts[from] = (unreadCounts[from] || 0) + 1;
+        unreadMessages[from] = (unreadMessages[from] || 0) + 1;
         renderUserList();
     }
 }
 
+function sendMessage() {
+    const input = $('chatInput');
+    const content = input.value.trim();
+    
+    if (!content || !ws) return;
+    
+    const key = [currentUser, currentPartner].sort().join('|');
+    
+    if (!chatMessages[key]) {
+        chatMessages[key] = [];
+    }
+    
+    chatMessages[key].push({
+        from: currentUser,
+        content: content,
+        time: new Date()
+    });
+    
+    ws.send(JSON.stringify({
+        type: 'privateMessage',
+        to: currentPartner,
+        content: content
+    }));
+    
+    input.value = '';
+    renderMessages();
+}
+
+// Chat event listeners
+$('btnSendMessage').onclick = sendMessage;
+$('chatInput').onkeypress = (e) => { if (e.key === 'Enter') sendMessage(); };
+$('btnBackToList').onclick = () => {
+    currentPartner = null;
+    showView($('chat-view'), $('chat-app-view'));
+};
+
+// ============================================
+// LOGIN / REGISTER
+// ============================================
 document.querySelectorAll('form').forEach(form => {
-    form.addEventListener('submit', (e) => {
+    form.onsubmit = (e) => {
         e.preventDefault();
+        
         let username;
-        if (loginView.classList.contains('view-active')) {
-            username = loginView.querySelector('input[type="email"]').value.split('@')[0];
+        
+        if ($('login-view').classList.contains('view-active')) {
+            // Login form - use email part before @
+            const emailInput = $('login-view').querySelector('input[type="email"]');
+            username = emailInput.value.split('@')[0];
         } else {
-            username = registerView.querySelector('input[type="text"]').value;
+            // Register form - use name input
+            const nameInput = $('register-view').querySelector('input[type="text"]');
+            username = nameInput.value;
         }
         
         if (!username) {
@@ -215,101 +230,153 @@ document.querySelectorAll('form').forEach(form => {
             return;
         }
         
-        if(loginView.classList.contains('view-active')) loginView.classList.replace('view-active', 'view-hidden');
-        if(registerView.classList.contains('view-active')) registerView.classList.replace('view-active', 'view-hidden');
+        // Save to localStorage
+        localStorage.setItem('saChatUsername', username);
         
-        document.body.style.background = '#0f172a';
-        chatAppView.classList.replace('view-hidden', 'view-active');
+        // Hide login/register, show chat
+        $('login-view').classList.contains('view-active') && 
+            $('login-view').classList.replace('view-active', 'view-hidden');
+        $('register-view').classList.contains('view-active') && 
+            $('register-view').classList.replace('view-active', 'view-hidden');
+        $('chat-app-view').classList.replace('view-hidden', 'view-active');
         
         connectWebSocket(username);
-    });
+    };
 });
 
-const btnSettings = document.getElementById('btnSettings');
-const settingsMenu = document.getElementById('settingsMenu');
-const btnLogout = document.getElementById('btnLogout');
-const btnOpenSettings = document.getElementById('btnOpenSettings');
+// Auto-fill saved username
+document.addEventListener('DOMContentLoaded', () => {
+    const savedUsername = localStorage.getItem('saChatUsername');
+    
+    if (savedUsername) {
+        const loginEmail = $('login-view').querySelector('input[type="email"]');
+        const registerName = $('register-view').querySelector('input[type="text"]');
+        
+        if (loginEmail) loginEmail.value = savedUsername + '@chat.nl';
+        if (registerName) registerName.value = savedUsername;
+    }
+});
 
-btnSettings.addEventListener('click', (e) => {
+// ============================================
+// SETTINGS MENU
+// ============================================
+$('btnSettings').onclick = (e) => {
     e.stopPropagation();
-    if (settingsMenu.classList.contains('view-hidden')) {
-        settingsMenu.classList.replace('view-hidden', 'view-active');
-    } else {
-        settingsMenu.classList.replace('view-active', 'view-hidden');
+    $('settingsMenu').classList.toggle('hidden');
+};
+
+// Close menu when clicking outside
+document.onclick = (e) => {
+    const menu = $('settingsMenu');
+    const btn = $('btnSettings');
+    
+    if (!menu.contains(e.target) && !btn.contains(e.target) && !menu.classList.contains('hidden')) {
+        menu.classList.add('hidden');
     }
-});
+};
 
-document.addEventListener('click', (e) => {
-    if (!settingsMenu.contains(e.target) && settingsMenu.classList.contains('view-active')) {
-        settingsMenu.classList.replace('view-active', 'view-hidden');
-    }
-});
-
-const settingsView = document.getElementById('settings-view');
-const btnBackFromSettings = document.getElementById('btnBackFromSettings');
-
-btnOpenSettings.addEventListener('click', () => {
-    settingsMenu.classList.replace('view-active', 'view-hidden');
-    chatAppView.classList.replace('view-active', 'view-hidden');
-    settingsView.classList.replace('view-hidden', 'view-active');
-});
-
-btnBackFromSettings.addEventListener('click', () => {
-    settingsView.classList.replace('view-active', 'view-hidden');
-    chatAppView.classList.replace('view-hidden', 'view-active');
-});
-
-// Settings Logic: Thema
-const themeCards = document.querySelectorAll('.theme-card');
-themeCards.forEach(card => {
-    card.addEventListener('click', () => {
-        themeCards.forEach(c => c.classList.remove('active'));
-        card.classList.add('active');
-        const theme = card.getAttribute('data-theme');
-        document.documentElement.setAttribute('data-theme', theme);
-    });
-});
-
-// Settings Logic: Lettergrootte
-const fontSizeItems = document.querySelectorAll('.font-size-item');
-fontSizeItems.forEach(item => {
-    item.addEventListener('click', () => {
-        fontSizeItems.forEach(i => i.classList.remove('active'));
-        item.classList.add('active');
-        const size = item.getAttribute('data-size');
-        if (size === 'klein') {
-            document.documentElement.style.setProperty('--base-font-size', '14px');
-        } else {
-            document.documentElement.style.setProperty('--base-font-size', '16px');
-        }
-    });
-});
-
-btnLogout.addEventListener('click', () => {
-    settingsMenu.classList.replace('view-active', 'view-hidden');
-    chatAppView.classList.replace('view-active', 'view-hidden');
-    document.body.style.background = '';
-    landingView.classList.replace('view-hidden', 'view-active');
+// Logout
+$('btnLogout').onclick = () => {
+    $('settingsMenu').classList.add('hidden');
+    $('chat-app-view').classList.replace('view-active', 'view-hidden');
+    $('landing-view').classList.replace('view-hidden', 'view-active');
     document.querySelectorAll('input').forEach(input => input.value = '');
+    localStorage.removeItem('saChatUsername');
+    
     if (ws) {
         ws.close();
         ws = null;
     }
+};
+
+// Open/close settings
+$('btnOpenSettings').onclick = () => {
+    $('settingsMenu').classList.add('hidden');
+    showView($('chat-app-view'), $('settings-view'));
+};
+
+$('btnBackFromSettings').onclick = () => {
+    showView($('settings-view'), $('chat-app-view'));
+};
+
+// ============================================
+// THEME SWITCHER
+// ============================================
+const themeSettings = {
+    cosmic: {
+        header: 'linear-gradient(90deg, #667EEA, #764BA2)',
+        accent: 'linear-gradient(135deg, #667EEA, #764BA2)',
+        bubble: 'linear-gradient(135deg, #667EEA, #764BA2)',
+        surface: '#1E293B',
+        surfaceLight: '#334155',
+        primary: '#A78BFA'
+    },
+    ocean: {
+        header: 'linear-gradient(90deg, #06B6D4, #3B82F6)',
+        accent: 'linear-gradient(135deg, #06B6D4, #3B82F6)',
+        bubble: 'linear-gradient(135deg, #06B6D4, #3B82F6)',
+        surface: '#1A2332',
+        surfaceLight: '#1E3A5F',
+        primary: '#06B6D4'
+    },
+    sunset: {
+        header: 'linear-gradient(90deg, #F97316, #EC4899)',
+        accent: 'linear-gradient(135deg, #F97316, #EC4899)',
+        bubble: 'linear-gradient(135deg, #F97316, #EC4899)',
+        surface: '#2A1F2E',
+        surfaceLight: '#3D2A3D',
+        primary: '#F97316'
+    },
+    forest: {
+        header: 'linear-gradient(90deg, #10B981, #34D399)',
+        accent: 'linear-gradient(135deg, #10B981, #34D399)',
+        bubble: 'linear-gradient(135deg, #10B981, #34D399)',
+        surface: '#1A2622',
+        surfaceLight: '#234139',
+        primary: '#10B981'
+    }
+};
+
+document.querySelectorAll('.theme-card').forEach(card => {
+    card.onclick = () => {
+        // Update active state
+        document.querySelectorAll('.theme-card').forEach(c => c.classList.remove('active'));
+        card.classList.add('active');
+        
+        // Apply theme
+        const theme = themeSettings[card.dataset.theme];
+        const root = document.documentElement;
+        
+        root.style.setProperty('--gradient-header', theme.header);
+        root.style.setProperty('--gradient-accent', theme.accent);
+        root.style.setProperty('--chat-bubble-me', theme.bubble);
+        root.style.setProperty('--surface', theme.surface);
+        root.style.setProperty('--surface-light', theme.surfaceLight);
+        root.style.setProperty('--primary', theme.primary);
+    };
 });
 
-// Search functionality
-const searchInput = document.getElementById('searchInput');
-if(searchInput) {
-    searchInput.addEventListener('input', (e) => {
-        const query = e.target.value.toLowerCase();
-        const chatItems = document.querySelectorAll('.chat-item');
-        chatItems.forEach(item => {
-            const name = item.querySelector('.chat-name').textContent.toLowerCase();
-            if (name.includes(query)) {
-                item.style.display = 'flex';
-            } else {
-                item.style.display = 'none';
-            }
-        });
+// ============================================
+// FONT SIZE
+// ============================================
+document.querySelectorAll('.font-item').forEach(item => {
+    item.onclick = () => {
+        document.querySelectorAll('.font-item').forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+        
+        const size = item.dataset.size === 'klein' ? '14px' : '16px';
+        document.body.style.fontSize = size;
+    };
+});
+
+// ============================================
+// SEARCH
+// ============================================
+$('searchInput').oninput = (e) => {
+    const query = e.target.value.toLowerCase();
+    
+    document.querySelectorAll('#chatList .chat-item').forEach(item => {
+        const name = item.querySelector('.chat-name').textContent.toLowerCase();
+        item.style.display = name.includes(query) ? 'flex' : 'none';
     });
-}
+};

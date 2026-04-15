@@ -3,55 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SA Chat - Welcome</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>SA Chat</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <!-- View 1: Landing Page -->
+    <!-- Animated Blobs -->
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+
+    <!-- Landing -->
     <div id="landing-view" class="view-active">
-        <div class="landing-container">
-            <div class="logo-wrapper">
-                <div class="logo-box">
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                    </svg>
-                </div>
-                <div class="notification-badge">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="white" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                    </svg>
-                </div>
+        <div class="landing">
+            <div class="logo-box">
+                💬
+                <div class="sparkle">✨</div>
             </div>
-            
-            <div class="title-section">
-                <h1 class="title">SA Chat</h1>
-                <div class="title-divider"></div>
-            </div>
-            
-            <p class="subtitle">Chat veilig en met stijl 💭</p>
-            
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon" style="color: #ffffff;">
-                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                    </div>
+            <h1 class="title">SA Chat</h1>
+            <div class="title-line"></div>
+            <p class="subtitle">Chat veilig en met stijl</p>
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">👥</div>
                     <span>Vrienden</span>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon" style="color: #4ade80;">
-                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-                    </div>
+                <div class="feature">
+                    <div class="feature-icon">🔒</div>
                     <span>Veilig</span>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon" style="color: #facc15;">
-                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-                    </div>
+                <div class="feature">
+                    <div class="feature-icon">⚡</div>
                     <span>Snel</span>
                 </div>
             </div>
-            
             <div class="auth-buttons">
                 <button class="btn btn-primary" id="btnToRegister">Account aanmaken</button>
                 <button class="btn btn-secondary" id="btnToLogin">Inloggen</button>
@@ -59,265 +44,87 @@
         </div>
     </div>
 
-    <!-- View 2: Login Page -->
+    <!-- Login -->
     <div id="login-view" class="view-hidden">
-        <div class="login-container">
-            <div class="header-nav">
-                <button id="btnBack" class="back-btn">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-                    Terug
-                </button>
-            </div>
-            
-            <div class="login-card">
-                <h2 class="login-title">Welkom terug!</h2>
-                <p class="login-subtitle">Log in op je account</p>
-                
-                <form class="login-form">
-                    <div class="form-group">
-                        <label>Email</label>
-                        <div class="input-wrapper">
-                            <div class="input-icon left">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                            </div>
-                            <input type="email" placeholder="jouw@email.nl" required>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Wachtwoord</label>
-                        <div class="input-wrapper">
-                            <div class="input-icon left">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                            </div>
-                            <input type="password" placeholder="••••••••" required id="passwordInput">
-                            <div class="input-icon right cursor-pointer" id="togglePassword">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="eyeIcon"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="forgot-password">
-                        <a href="#">Wachtwoord vergeten?</a>
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary submit-btn">Inloggen</button>
-                    
-                    <div class="register-link">
-                        Nog geen account? <a href="#" id="linkToRegister">Registreer hier</a>
-                    </div>
-                </form>
-            </div>
+        <div class="auth-card">
+            <button class="back-btn" id="btnBack">← Terug</button>
+            <h2>Welkom terug!</h2>
+            <p>Log in op je account</p>
+            <form class="auth-form">
+                <div style="position: relative;">
+                    <span class="input-icon">📧</span>
+                    <input type="email" placeholder="Email" required>
+                </div>
+                <div class="password-field">
+                    <span class="input-icon">🔒</span>
+                    <input type="password" placeholder="Wachtwoord" required id="passwordInput">
+                    <button type="button" id="togglePassword">👁</button>
+                </div>
+                <button type="submit" class="btn btn-primary">Inloggen</button>
+                <p>Nog geen account? <a href="#" id="linkToRegister">Registreer hier</a></p>
+            </form>
         </div>
     </div>
 
-    <!-- View 4: Register Page -->
+    <!-- Register -->
     <div id="register-view" class="view-hidden">
-        <div class="login-container">
-            <div class="header-nav">
-                <button id="btnBackToLanding" class="back-btn">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-                    Terug
-                </button>
-            </div>
-            
-            <div class="login-card">
-                <h2 class="login-title">Account aanmaken</h2>
-                <p class="login-subtitle">Begin met chatten in stijl</p>
-                
-                <form class="register-form login-form">
-                    <div class="form-group">
-                        <label>Naam</label>
-                        <div class="input-wrapper">
-                            <div class="input-icon left">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                            </div>
-                            <input type="text" placeholder="Jouw naam" required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Email</label>
-                        <div class="input-wrapper">
-                            <div class="input-icon left">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                            </div>
-                            <input type="email" placeholder="jouw@email.nl" required>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Wachtwoord</label>
-                        <div class="input-wrapper">
-                            <div class="input-icon left">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                            </div>
-                            <input type="password" placeholder="••••••••" required id="regPasswordInput">
-                            <div class="input-icon right cursor-pointer" id="regTogglePassword">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="regEyeIcon"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Bevestig wachtwoord</label>
-                        <div class="input-wrapper">
-                            <div class="input-icon left">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                            </div>
-                            <input type="password" placeholder="••••••••" required>
-                        </div>
-                    </div>
-                    
-                    <div style="height: 10px;"></div>
-                    <button type="submit" class="btn btn-primary submit-btn">Account aanmaken</button>
-                    
-                    <div class="register-link">
-                        Al een account? <a href="#" id="linkToLogin">Log hier in</a>
-                    </div>
-                </form>
-            </div>
+        <div class="auth-card">
+            <button class="back-btn" id="btnBackToLanding">← Terug</button>
+            <h2>Account aanmaken</h2>
+            <p>Begin met chatten in stijl</p>
+            <form class="auth-form">
+                <div style="position: relative;">
+                    <span class="input-icon">👤</span>
+                    <input type="text" placeholder="Naam" required>
+                </div>
+                <div style="position: relative;">
+                    <span class="input-icon">📧</span>
+                    <input type="email" placeholder="Email" required>
+                </div>
+                <div class="password-field">
+                    <span class="input-icon">🔒</span>
+                    <input type="password" placeholder="Wachtwoord" required id="regPasswordInput">
+                    <button type="button" id="regTogglePassword">👁</button>
+                </div>
+                <div style="position: relative;">
+                    <span class="input-icon">🔒</span>
+                    <input type="password" placeholder="Bevestig wachtwoord" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Account aanmaken</button>
+                <p>Al een account? <a href="#" id="linkToLogin">Log hier in</a></p>
+            </form>
         </div>
     </div>
 
-    <!-- View 3: Chat List App -->
+    <!-- Chat List -->
     <div id="chat-app-view" class="view-hidden">
-<div class="app-header">
-            <h2 class="app-title">SA Chat</h2>
-            <div class="app-header-icons" style="position: relative;">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="cursor-pointer">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="12" cy="7" r="4"></circle>
-                </svg>
-                <svg id="btnSettings" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="cursor-pointer">
-                    <circle cx="12" cy="12" r="3"></circle>
-                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-                </svg>
-                
-                <div id="settingsMenu" class="settings-dropdown view-hidden">
-                    <button id="btnOpenSettings" class="dropdown-item">Instellingen</button>
-                    <div class="dropdown-divider"></div>
-                    <button id="btnLogout" class="dropdown-item text-danger">Uitloggen</button>
-                </div>
+        <div class="app-header">
+            <h2>SA Chat</h2>
+            <button class="icon-btn" id="btnSettings">⚙️</button>
+            <div class="settings-menu hidden" id="settingsMenu">
+                <button id="btnOpenSettings">⚙️ Instellingen</button>
+                <div class="divider"></div>
+                <button id="btnLogout" class="logout">🚪 Uitloggen</button>
             </div>
         </div>
-
-        <div class="search-container">
-            <div class="search-bar">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon">
-                    <circle cx="11" cy="11" r="8"></circle>
-                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                </svg>
-                <input type="text" id="searchInput" placeholder="Zoek vrienden...">
-            </div>
+        
+        <div class="search-bar">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="searchInput" placeholder="Zoek vrienden...">
         </div>
-
-        <div class="chat-list">
-            <div class="chat-item">
-                <div class="avatar-container">
-                    <img src="https://i.pravatar.cc/150?img=1" alt="Sophie">
-                    <div class="status-indicator online-purple"></div>
-                </div>
-                <div class="chat-info">
-                    <div class="chat-header-info">
-                        <span class="chat-name">Sophie</span>
-                        <span class="chat-time">15 minuten geleden</span>
-                    </div>
-                    <div class="chat-message-info">
-                        <span class="chat-snippet">Zie je later!</span>
-                        <span class="unread-badge">2</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="chat-item">
-                <div class="avatar-container">
-                    <img src="https://i.pravatar.cc/150?img=11" alt="Thomas">
-                </div>
-                <div class="chat-info">
-                    <div class="chat-header-info">
-                        <span class="chat-name">Thomas</span>
-                        <span class="chat-time">40 minuten geleden</span>
-                    </div>
-                    <div class="chat-message-info">
-                        <span class="chat-snippet">Perfect, tot morgen!</span>
-                        <span class="unread-badge hidden">0</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="chat-item">
-                <div class="avatar-container">
-                    <img src="https://i.pravatar.cc/150?img=5" alt="Emma">
-                    <div class="status-indicator online-purple"></div>
-                </div>
-                <div class="chat-info">
-                    <div class="chat-header-info">
-                        <span class="chat-name">Emma</span>
-                        <span class="chat-time">ongeveer 2 uur geleden</span>
-                    </div>
-                    <div class="chat-message-info">
-                        <span class="chat-snippet">Haha dat is grappig 😂</span>
-                        <span class="unread-badge">1</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="chat-item">
-                <div class="avatar-container">
-                    <img src="https://i.pravatar.cc/150?img=12" alt="Lars">
-                </div>
-                <div class="chat-info">
-                    <div class="chat-header-info">
-                        <span class="chat-name">Lars</span>
-                        <span class="chat-time">ongeveer 5 uur geleden</span>
-                    </div>
-                    <div class="chat-message-info">
-                        <span class="chat-snippet">Bedankt voor de info!</span>
-                        <span class="unread-badge hidden">0</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="chat-item">
-                <div class="avatar-container">
-                    <img src="https://i.pravatar.cc/150?img=9" alt="Lisa">
-                    <div class="status-indicator online-purple"></div>
-                </div>
-                <div class="chat-info">
-                    <div class="chat-header-info">
-                        <span class="chat-name">Lisa</span>
-                        <span class="chat-time">1 dag geleden</span>
-                    </div>
-                    <div class="chat-message-info">
-                        <span class="chat-snippet">Leuk plan! 🎉</span>
-                        <span class="unread-badge hidden">0</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+        
+        <div class="chat-list" id="chatList"></div>
     </div>
 
-    <!-- Settings View -->
+    <!-- Settings -->
     <div id="settings-view" class="view-hidden">
-        <div class="chat-header-bar settings-header">
-            <button id="btnBackFromSettings" class="back-btn">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-                Instellingen
-            </button>
+        <div class="app-header">
+            <button class="back-btn" id="btnBackFromSettings">← Instellingen</button>
         </div>
         <div class="settings-content">
             <div class="settings-section">
                 <div class="settings-section-title">
-                    <div class="settings-icon-bg">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"></circle>
-                            <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"></circle>
-                            <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"></circle>
-                            <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"></circle>
-                            <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"></path>
-                        </svg>
-                    </div>
+                    <div class="settings-icon">🎨</div>
                     <span>Thema</span>
                 </div>
                 <div class="theme-grid">
@@ -339,43 +146,30 @@
                     </div>
                 </div>
             </div>
-
             <div class="settings-section">
                 <div class="settings-section-title">
-                    <div class="settings-icon-bg">
-                        <span style="font-family: serif; font-size: 14px; font-weight: bold; color: white;">T</span>
-                    </div>
+                    <div class="settings-icon">🔤</div>
                     <span>Lettergrootte</span>
                 </div>
-                <div class="font-size-list">
-                    <div class="font-size-item" data-size="klein">
-                        <span>Klein</span>
-                    </div>
-                    <div class="font-size-item active" data-size="normaal">
-                        <span>Normaal</span>
-                    </div>
+                <div class="font-list">
+                    <div class="font-item" data-size="klein">Klein</div>
+                    <div class="font-item active" data-size="normaal">Normaal</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Chat Scherm -->
+    <!-- Chat -->
     <div id="chat-view" class="view-hidden">
-        <div class="chat-header-bar">
-            <button id="btnBackToList" class="back-btn">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-                Terug
-            </button>
-            <div class="chat-user-info">
-                <span id="chatPartnerName"></span>
-            </div>
+        <div class="chat-header">
+            <button class="back-btn" id="btnBackToList">←</button>
+            <span id="chatPartnerName"></span>
+            <span class="online-dot"></span>
         </div>
-        <div id="chatMessages" class="chat-messages"></div>
-        <div class="chat-input-area">
+        <div class="chat-messages" id="chatMessages"></div>
+        <div class="chat-input">
             <input type="text" id="chatInput" placeholder="Type een bericht...">
-            <button id="btnSendMessage" class="send-btn">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-            </button>
+            <button class="send-btn" id="btnSendMessage">➤</button>
         </div>
     </div>
 
