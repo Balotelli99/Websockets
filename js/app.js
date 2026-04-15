@@ -50,9 +50,10 @@ $('regTogglePassword').onclick = () => {
 // WEBSOCKET CONNECTION
 // ============================================
 function connectWebSocket(username) {
-    // Use wss:// for production, ws:// for local
-    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-    const protocol = isLocalhost ? 'ws:' : 'wss:';
+    // Bepaal automatisch of we 'ws://' (lokaal) of 'wss://' (live op Render/HTTPS) moeten gebruiken
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    
+    // Pak automatisch de juiste domeinnaam en route
     const wsUrl = `${protocol}//${window.location.host}/ws`;
     
     console.log('Connecting to:', wsUrl);
