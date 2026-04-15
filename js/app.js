@@ -52,17 +52,32 @@ $('regTogglePassword').onclick = () => {
 function connectWebSocket(username) {
     // Use correct protocol (ws for http, wss for https)
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    ws = new WebSocket(`${protocol}//${window.location.host}`);
+    const wsUrl = `${protocol}//${window.location.host}`;
+    
+    console.log('Connecting to:', wsUrl);
+    
+    ws = new WebSocket(wsUrl);
     currentUser = username;
     
     ws.onopen = () => {
+        console.log('WebSocket connected!');
         ws.send(JSON.stringify({ type: 'login', username: username }));
     };
     
+    ws.onerror = (error) => {
+        console.error('WebSocket error:', error);
+    };
+    
+    ws.onclose = (event) => {
+        console.log('WebSocket closed:', event.code, event.reason);
+    };
+    
     ws.onmessage = (event) => {
+        console.log('Received:', event.data);
         const data = JSON.parse(event.data);
         
         if (data.type === 'userList') {
+            console.log('User list:', data.users);
             onlineUsers = data.users.filter(u => u.username !== currentUser);
             renderUserList();
         }
